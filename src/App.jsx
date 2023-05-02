@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./App.css";
 import { ToDoList } from "./components/ToDoList";
 import {
@@ -13,12 +13,20 @@ function App() {
   const [listItems, setListItems] = useState([]);
   const listInput = useRef();
 
+  useEffect(() => {
+    setListItems(JSON.parse(localStorage.getItem("list")) || []);
+  }, []);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (listInput.current.value) {
+      localStorage.setItem(
+        "list",
+        JSON.stringify([...listItems, listInput.current.value])
+      );
       setListItems([...listItems, listInput.current.value]);
+
       listInput.current.value = null;
-      console.log(listItems);
     }
   };
 
@@ -26,7 +34,10 @@ function App() {
     e.preventDefault();
     setListItems([]);
     listInput.current.value = null;
+
+    localStorage.setItem("list", null);
   };
+
   return (
     <>
       <FlexContainerCol>
