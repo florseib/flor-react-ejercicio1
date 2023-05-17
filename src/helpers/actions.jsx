@@ -1,4 +1,6 @@
 import axios from "axios";
+import { ToDoContext } from "../context/ToDoContext";
+import { useContext } from "react";
 
 export const submitTodo = (e) => {
   e.preventDefault();
@@ -16,6 +18,8 @@ export const submitTodo = (e) => {
 export const submitPokeAPI = async (e, pokemon) => {
   e.preventDefault();
 
+  const { dispatch } = useContext(ToDoContext);
+
   try {
     let selectedPokemon = pokemon.toLowerCase().trim();
 
@@ -23,9 +27,9 @@ export const submitPokeAPI = async (e, pokemon) => {
       `https://pokeapi.co/api/v2/pokemon/${selectedPokemon}`
     );
     console.log(data);
-    // dispatch(success(data));
+    dispatch({ type: "success", pokemon: data });
   } catch (err) {
     console.log(err);
-    // dispatch(isError());
+    dispatch({ type: "notFound" });
   }
 };

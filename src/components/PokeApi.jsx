@@ -5,36 +5,32 @@ import {
   Input,
   Button,
 } from "../assets/Styles";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { ToDoContext } from "../context/ToDoContext";
 import { submitPokeAPI } from "../helpers/actions";
+import { ErrorMessage } from "./ErrorMessage";
 
 export const PokeApi = () => {
-  const [pokemon, setPokemon] = useState("");
+  const [pokemonInput, setPokemon] = useState("");
+  const { state } = useContext(ToDoContext);
+
   return (
     <FlexContainerCol>
       <FormPokeAPI
         onSubmit={(e) => {
-          submitPokeAPI(e, pokemon);
+          submitPokeAPI(e, pokemonInput);
         }}
       >
         {/* <FlexContainer> */}
         <Input
-          value={pokemon}
+          value={pokemonInput}
           onChange={(e) => setPokemon(e.target.value)}
         ></Input>{" "}
         <Button type="submit">Search</Button>
         {/* </FlexContainer> */}
       </FormPokeAPI>
       <div style={{ width: "20%" }}>
-        {/* {list.length !== 0 ? (
-            <ListComponent>
-              {list.map((item, i) => {
-                return <li key={i}>{item}</li>;
-              })}
-            </ListComponent>
-          ) : (
-            <NoItemsMessage>No hay ítems</NoItemsMessage>
-          )} */}
+        {state.error && <ErrorMessage>{state.error}</ErrorMessage>}
         In progress
       </div>
     </FlexContainerCol>
