@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { NavLink } from "react-router-dom";
 
 export const FlexContainer = styled.div`
   display: flex;
@@ -11,6 +12,10 @@ export const FlexContainerCol = styled(FlexContainer)`
 
 export const FlexContainerButtons = styled(FlexContainer)`
   margin-top: 1rem;
+`;
+
+export const InputContainer = styled(FlexContainer)`
+  width: 40%;
 `;
 
 export const Button = styled.button`
@@ -66,7 +71,7 @@ export const LinkContainer = styled.div`
   font-size: 1.2em;
 `;
 
-export const Link = styled.a`
+export const Link = styled(NavLink)`
   color: ${(p) => (p.red ? "red" : "#ffffff")};
   cursor: pointer;
 `;

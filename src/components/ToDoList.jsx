@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState, useReducer } from "react";
 import { ToDoContext } from "../context/ToDoContext";
 import {
   FlexContainerCol,
@@ -8,7 +8,7 @@ import {
   Input,
 } from "../assets/Styles";
 import styled from "styled-components";
-import { submitTodo } from "../helpers/actions";
+import { ErrorMessage } from "./ErrorMessage";
 
 const ListComponent = styled.ul`
   font-size: 1.3rem;
@@ -22,29 +22,60 @@ const NoItemsMessage = styled.div`
 
 export const ToDoList = () => {
   const { list, setList } = useContext(ToDoContext);
-  const listInput = useRef();
 
   useEffect(() => {
     setList(JSON.parse(localStorage.getItem("list")) || []);
   }, []);
 
-  const deleteList = (e) => {
-    e.preventDefault();
-    setList([]);
-    listInput.current.value = null;
+  const [error, setError] = useState("");
 
-    localStorage.setItem("list", null);
+  const listInput = useRef();
+
+  const deleteList = (e) => {
+    setError("");
+    e.preventDefault();
+    if (
+      list.length > 0 &&
+      confirm("Are you sure you want to delete every element in the list?")
+    ) {
+      setList([]);
+      listInput.current.value = null;
+
+      localStorage.setItem("list", null);
+    }
+  };
+
+  const submitTodo = (e) => {
+    e.preventDefault();
+    setError("");
+    if (listInput.current.value) {
+      if (list.some((x) => x === listInput.current.value))
+        setError("You already have an identical item in your list.");
+      else {
+        localStorage.setItem(
+          "list",
+          JSON.stringify([...list, listInput.current.value])
+        );
+        setList([...list, listInput.current.value]);
+
+        listInput.current.value = null;
+      }
+    } else {
+      setError("Please input something into the field.");
+    }
   };
 
   return (
     <FlexContainerCol>
       <FormCol onSubmit={submitTodo}>
-        <Input ref={listInput}></Input>
+        <Input ref={listInput} onChange={() => setError("")}></Input>
         <FlexContainerButtons>
           <Button type="submit">Add</Button>
           <Button onClick={deleteList}>Delete All</Button>
         </FlexContainerButtons>
       </FormCol>
+      {error && <ErrorMessage>{error}</ErrorMessage>}
+
       <div style={{ width: "20%" }}>
         {list.length !== 0 ? (
           <ListComponent>

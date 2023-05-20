@@ -15,7 +15,11 @@ export const reducer = (state, action) => {
       return {
         ...state,
         error: "No se encontró un Pokémon con ese nombre",
-        pokemon: null,
+      };
+    case "emptyField":
+      return {
+        ...state,
+        error: "Por favor ingrese algo en el campo de búsqueda",
       };
     default:
       return {
