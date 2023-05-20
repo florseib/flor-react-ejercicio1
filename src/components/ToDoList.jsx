@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState, useReducer } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { ToDoContext } from "../context/ToDoContext";
 import {
   FlexContainerCol,
@@ -22,10 +22,6 @@ const NoItemsMessage = styled.div`
 
 export const ToDoList = () => {
   const { list, setList } = useContext(ToDoContext);
-
-  useEffect(() => {
-    setList(JSON.parse(localStorage.getItem("list")) || []);
-  }, []);
 
   const [error, setError] = useState("");
 
