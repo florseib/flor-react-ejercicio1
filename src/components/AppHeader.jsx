@@ -1,10 +1,9 @@
-import { useContext } from "react";
+import { useSelector } from "react-redux";
 import { Header } from "../assets/Styles";
 import { MenuContent, LinkContainer, Link } from "../assets/Styles.jsx";
-import { ToDoContext } from "../context/ToDoContext";
 
 export const AppHeader = () => {
-  const { list } = useContext(ToDoContext);
+  const list = useSelector((state) => state.list);
 
   return (
     <Header>

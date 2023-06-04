@@ -1,5 +1,4 @@
-import { useContext, useEffect, useRef, useState } from "react";
-import { ToDoContext } from "../context/ToDoContext";
+import { useRef, useState } from "react";
 import {
   FlexContainerCol,
   FlexContainerButtons,
@@ -9,6 +8,8 @@ import {
 } from "../assets/Styles";
 import styled from "styled-components";
 import { ErrorMessage } from "./ErrorMessage";
+import { useDispatch, useSelector } from "react-redux";
+import { emptyList, add } from "../redux/slice/ToDoSlice";
 
 const ListComponent = styled.ul`
   font-size: 1.3rem;
@@ -21,7 +22,8 @@ const NoItemsMessage = styled.div`
 `;
 
 export const ToDoList = () => {
-  const { list, setList } = useContext(ToDoContext);
+  const dispatch = useDispatch();
+  const list = useSelector((state) => state.list);
 
   const [error, setError] = useState("");
 
@@ -34,7 +36,7 @@ export const ToDoList = () => {
       list.length > 0 &&
       confirm("Are you sure you want to delete every element in the list?")
     ) {
-      setList([]);
+      dispatch(emptyList());
       listInput.current.value = null;
 
       localStorage.setItem("list", null);
@@ -52,7 +54,7 @@ export const ToDoList = () => {
           "list",
           JSON.stringify([...list, listInput.current.value])
         );
-        setList([...list, listInput.current.value]);
+        dispatch(add(listInput.current.value));
 
         listInput.current.value = null;
       }
